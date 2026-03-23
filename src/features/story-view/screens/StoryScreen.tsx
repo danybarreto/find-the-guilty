@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Button, SafeAreaView, Image } from 'react-native';
+import { View, Text, StyleSheet, Button, SafeAreaView, Image, useWindowDimensions } from 'react-native';
 import { useStoryEngine } from '../../game-engine/hooks/useStoryEngine';
 import { ComicPanel } from '../components/ComicPanel';
 import { HUD } from '../components/HUD';
@@ -12,6 +12,7 @@ import { LockpickGame } from '../../minigames/LockpickGame';
 import { TerminalHacker } from '../../minigames/TerminalHacker';
 
 export const StoryScreen = () => {
+    const { height: windowHeight } = useWindowDimensions();
     const { currentNode, makeChoice } = useStoryEngine();
     const resetGame = useGameStore((state) => state.resetGame);
     const removeItem = useGameStore((state) => state.removeItem);
@@ -52,9 +53,9 @@ export const StoryScreen = () => {
             <HUD />
 
             {currentNode.type === 'minigame' ? (
-                <View style={styles.minigameContainer}>
+                <View style={[styles.minigameContainer, { paddingBottom: 20 }]}>
                     {currentNode.image && (
-                        <View style={styles.imageContainer}>
+                        <View style={[styles.imageContainer, { flex: 0.7 }]}>
                             <Image source={currentNode.image} style={styles.nodeImage} resizeMode="cover" />
                         </View>
                     )}
@@ -124,11 +125,10 @@ const styles = StyleSheet.create({
     minigameContainer: {
         flex: 1,
         alignItems: 'center',
-        paddingTop: 20
+        paddingTop: 0
     },
     imageContainer: {
-        width: '90%',
-        height: 200,
+        width: '100%',
         marginBottom: 10,
         borderWidth: 2,
         borderColor: '#fff',

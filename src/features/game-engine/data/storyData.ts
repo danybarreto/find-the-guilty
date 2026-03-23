@@ -19,7 +19,7 @@ export const storyData: StoryData = {
             content: 'The victim is clutching a strange coin. It looks ancient.',
             itemReward: 'ancient_coin',
             journalEntry: 'Found victim with an ancient coin.',
-            image: require('../assets/images/coin.png'),
+            image: require('../assets/images/body_examine.png'),
             choices: [
                 { id: 'c3', text: 'Keep the coin', nextNodeId: 'keep_coin' },
                 { id: 'c4', text: 'Leave it for forensics', nextNodeId: 'leave_coin' },
@@ -30,7 +30,7 @@ export const storyData: StoryData = {
             type: 'choice',
             content: 'The witness is shaking. "I saw a shadow... huge... with glowing eyes!"',
             journalEntry: 'Witness saw a huge shadow with glowing eyes.',
-            image: require('../assets/images/witness.png'),
+            image: require('../assets/images/witness_talk.png'),
             choices: [
                 { id: 'c5', text: 'Press for details', nextNodeId: 'witness_press' },
                 { id: 'c6', text: 'Check the alley', nextNodeId: 'alley_check' },
@@ -40,35 +40,167 @@ export const storyData: StoryData = {
             id: 'keep_coin',
             type: 'narrative',
             content: 'You pocket the coin. It feels warm.',
+            image: require('../assets/images/keep_coin.png'),
             choices: [{ id: 'c7', text: 'Continue investigation', nextNodeId: 'search_alley' }],
         },
         leave_coin: {
             id: 'leave_coin',
             type: 'ending',
             content: 'You leave the evidence. Later, it disappears. Case Cold. GAME OVER.',
+            image: require('../assets/images/leave_coin.png'),
         },
         witness_press: {
             id: 'witness_press',
             type: 'ending',
             content: 'The witness panics and runs away. You lost your only lead. GAME OVER.',
+            image: require('../assets/images/witness_press.png'),
         },
         alley_check: {
             id: 'alley_check',
             type: 'narrative',
-            content: 'You check the alley. You find footprints leading to the sewer.',
-            journalEntry: 'Footprints lead to the sewer.',
-            choices: [{ id: 'c8', text: 'Enter sewer', nextNodeId: 'sewer_enter' }],
+            content: 'You check the alley. You find a matchbook for "The Neon Bar" covered in blood.',
+            journalEntry: 'Found a bloody matchbook for "The Neon Bar".',
+            image: require('../assets/images/alley_check.png'),
+            choices: [{ id: 'c8', text: 'Go to the Bar', nextNodeId: 'neon_bar_exterior' }],
         },
         search_alley: {
             id: 'search_alley',
             type: 'narrative',
-            content: 'With the coin in hand, the alley looks different/darker.',
-            choices: [{ id: 'c9', text: 'Use coin as light', nextNodeId: 'sewer_enter' }],
+            content: 'With the coin in hand, the alley reveals a hidden glowing message pointing to "The Neon Bar".',
+            journalEntry: 'Coin revealed a hidden message about The Neon Bar.',
+            image: require('../assets/images/search_alley.png'),
+            choices: [{ id: 'c9', text: 'Go to the Bar', nextNodeId: 'neon_bar_exterior' }],
+        },
+        neon_bar_exterior: {
+            id: 'neon_bar_exterior',
+            type: 'choice',
+            content: 'The Neon Bar is a dive in the lower sectors. Rain pours heavily.',
+            image: require('../assets/images/neon_bar_exterior.png'),
+            choices: [
+                { id: 'nb1', text: 'Enter quietly', nextNodeId: 'neon_bar_inside' },
+                { id: 'nb2', text: 'Kick the door in', nextNodeId: 'neon_bar_aggressive' }
+            ]
+        },
+        neon_bar_aggressive: {
+            id: 'neon_bar_aggressive',
+            type: 'ending',
+            content: 'You kick the door in. The bouncer turns you into swiss cheese. GAME OVER.',
+            image: require('../assets/images/neon_bar_aggressive.png')
+        },
+        neon_bar_inside: {
+            id: 'neon_bar_inside',
+            type: 'choice',
+            content: 'Inside, a Cyborg Bartender is wiping a glass. He glares at you.',
+            image: require('../assets/images/neon_bar_inside.png'),
+            choices: [
+                { id: 'nb3', text: 'Ask about the victim', nextNodeId: 'bartender_interrogate' },
+                { id: 'nb4', text: 'Order a drink', nextNodeId: 'bartender_drink' }
+            ]
+        },
+        bartender_drink: {
+            id: 'bartender_drink',
+            type: 'narrative',
+            content: 'You order a whiskey. The bartender loosens up. "Your victim... he has an apartment in Sector 4."',
+            journalEntry: 'Victim lived in Sector 4.',
+            image: require('../assets/images/bartender_drink.png'),
+            choices: [{ id: 'nb5', text: 'Go to Apartment', nextNodeId: 'apartment_exterior' }]
+        },
+        bartender_interrogate: {
+            id: 'bartender_interrogate',
+            type: 'choice',
+            content: '"I don\'t know nothing," he growls, reaching under the counter.',
+            choices: [
+                { id: 'nb6', text: 'Draw weapon', nextNodeId: 'bartender_fight' },
+                { id: 'nb7', text: 'Show badge', nextNodeId: 'bartender_drink' }
+            ]
+        },
+        bartender_fight: {
+            id: 'bartender_fight',
+            type: 'ending',
+            content: 'You draw your weapon, but his arm transforms into a plasma cannon. You get vaporized. GAME OVER.'
+        },
+        apartment_exterior: {
+            id: 'apartment_exterior',
+            type: 'narrative',
+            content: 'You arrive at Sector 4. The door to the apartment is ajar.',
+            choices: [{ id: 'ap1', text: 'Enter carefully', nextNodeId: 'apartment_inside' }]
+        },
+        apartment_inside: {
+            id: 'apartment_inside',
+            type: 'choice',
+            content: 'The apartment is trashed. Papers everywhere, a glowing monitor in the corner.',
+            image: require('../assets/images/abandoned_apartment.png'),
+            choices: [
+                { id: 'ap2', text: 'Check monitor', nextNodeId: 'apartment_monitor' },
+                { id: 'ap3', text: 'Check papers', nextNodeId: 'apartment_papers' }
+            ]
+        },
+        apartment_papers: {
+            id: 'apartment_papers',
+            type: 'narrative',
+            content: 'You find a flyer for a hacker named "Zero". It has an address.',
+            journalEntry: 'Found address for hacker "Zero".',
+            choices: [{ id: 'ap4', text: 'Go to Hacker Den', nextNodeId: 'hacker_exterior' }]
+        },
+        apartment_monitor: {
+            id: 'apartment_monitor',
+            type: 'narrative',
+            content: 'The monitor is rigged! A flashbang goes off, blinding you.',
+            choices: [{ id: 'ap5', text: 'Stumble blindly', nextNodeId: 'cop_encounter' }]
+        },
+        cop_encounter: {
+            id: 'cop_encounter',
+            type: 'choice',
+            content: 'You trip outside, right into a Corrupt Cop. "Well well... an easy bust."',
+            image: require('../assets/images/corrupt_cop.png'),
+            choices: [
+                { id: 'cop1', text: 'Bribe him', nextNodeId: 'cop_bribe' },
+                { id: 'cop2', text: 'Fight him', nextNodeId: 'cop_fight' },
+                { id: 'cop3', text: 'Run', nextNodeId: 'cop_run' }
+            ]
+        },
+        cop_fight: {
+            id: 'cop_fight',
+            type: 'ending',
+            content: 'He is wearing level 4 kinetic armor. Your punches do nothing. He arrests you. GAME OVER.'
+        },
+        cop_run: {
+            id: 'cop_run',
+            type: 'ending',
+            content: 'You try to run, but he shoots you with a stun gun. You are captured. GAME OVER.'
+        },
+        cop_bribe: {
+            id: 'cop_bribe',
+            type: 'narrative',
+            content: 'You hand him all your credits. He scoffs but lets you go. You find the hacker address from his terminal while he wasn\'t looking.',
+            choices: [{ id: 'cop4', text: 'Go to Hacker Den', nextNodeId: 'hacker_exterior' }]
+        },
+        hacker_exterior: {
+            id: 'hacker_exterior',
+            type: 'narrative',
+            content: 'You arrive at the Hacker Den. It is hidden behind an old subway station.',
+            choices: [{ id: 'h1', text: 'Enter', nextNodeId: 'hacker_inside' }]
+        },
+        hacker_inside: {
+            id: 'hacker_inside',
+            type: 'choice',
+            content: 'Monitors everywhere. Zero turns around. "I can find who did this... for a price."',
+            image: require('../assets/images/hacker_den.png'),
+            choices: [
+                { id: 'h2', text: 'Ask for server access', nextNodeId: 'sewer_enter' },
+                { id: 'h3', text: 'Ask for the killer\'s name', nextNodeId: 'hacker_refusal' }
+            ]
+        },
+        hacker_refusal: {
+            id: 'hacker_refusal',
+            type: 'narrative',
+            content: '"I don\'t sell names. Only access. The server is hidden in the sewers. I sent you the location."',
+            choices: [{ id: 'h4', text: 'Go to Sewers', nextNodeId: 'sewer_enter' }]
         },
         sewer_enter: {
             id: 'sewer_enter',
             type: 'minigame',
-            content: 'A locked gate blocks your path. Pick the lock!',
+            content: 'A locked grate blocks the server entrance. Pick the lock!',
             minigameId: 'lockpick',
             image: require('../assets/images/sewer_gate.png'),
             choices: [
@@ -79,13 +211,13 @@ export const storyData: StoryData = {
         sewer_success: {
             id: 'sewer_success',
             type: 'narrative',
-            content: 'You opened the gate! You find a hidden door with a strange electronic lock.',
+            content: 'You opened the grate! You find a hidden door with a strange electronic lock.',
             choices: [{ id: 'c10', text: 'Examine lock', nextNodeId: 'lab_door' }]
         },
         lab_door: {
             id: 'lab_door',
             type: 'minigame',
-            content: 'Crack the security code to enter.',
+            content: 'Crack the security code to enter the server room.',
             minigameId: 'cipher',
             image: require('../assets/images/lab_door.png'),
             choices: [

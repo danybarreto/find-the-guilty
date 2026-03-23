@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image, useWindowDimensions } from 'react-native';
 import { StoryNode, Choice } from '../../game-engine/types';
 import * as Haptics from 'expo-haptics';
 import { theme } from '@/shared/theme';
@@ -11,6 +11,7 @@ interface ComicPanelProps {
 }
 
 export const ComicPanel: React.FC<ComicPanelProps> = ({ node, onChoiceSelect }) => {
+    const { height: windowHeight } = useWindowDimensions();
     const [isTextFinished, setIsTextFinished] = useState(false);
 
     // Reset text state when node changes
@@ -31,89 +32,103 @@ export const ComicPanel: React.FC<ComicPanelProps> = ({ node, onChoiceSelect }) 
         return (
             <View style={[styles.container, styles.endingContainer]}>
                 {node.image && (
-                    <View style={styles.imageContainer}>
+                    <View style={[styles.imageContainer, { flex: 0.65 }]}>
                         <Image source={node.image} style={styles.nodeImage} resizeMode="cover" />
                     </View>
                 )}
-                <View style={[styles.panel, { borderColor: theme.colors.error }]}>
-                    <TypewriterText
-                        text={node.content}
-                        style={styles.content}
-                        onComplete={() => setIsTextFinished(true)}
-                    />
+                <View style={[styles.contentArea, { flex: 0.35 }]}>
+                    <ScrollView contentContainerStyle={styles.scrollContent}>
+                        <View style={[styles.panel, { borderColor: theme.colors.error, minHeight: 'auto' }]}>
+                            <TypewriterText
+                                text={node.content}
+                                style={styles.content}
+                                onComplete={() => setIsTextFinished(true)}
+                            />
+                        </View>
+                        {isTextFinished && <Text style={styles.gameOverText}>GAME OVER</Text>}
+                    </ScrollView>
                 </View>
-                {isTextFinished && <Text style={styles.gameOverText}>GAME OVER</Text>}
             </View>
         )
     }
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
-            <TouchableOpacity activeOpacity={1} onPress={handleSkip}>
-                <View style={styles.panel}>
-                    {node.image && (
-                        <View style={styles.imageContainer}>
-                            <Image source={node.image} style={styles.nodeImage} resizeMode="cover" />
-                        </View>
-                    )}
-                    {isTextFinished ? (
-                        <Text style={styles.content}>{node.content}</Text>
-                    ) : (
-                        <TypewriterText
-                            text={node.content}
-                            style={styles.content}
-                            onComplete={() => setIsTextFinished(true)}
-                            speed={30}
-                        />
-                    )}
-                </View>
-            </TouchableOpacity>
-
-            {isTextFinished && (
-                <View style={styles.choicesContainer}>
-                    {node.choices?.map((choice, index) => (
-                        <TouchableOpacity
-                            key={choice.id}
-                            style={[
-                                styles.choiceButton,
-                                { transform: [{ rotate: index % 2 === 0 ? '-1deg' : '1deg' }] }
-                            ]}
-                            onPress={() => handleChoice(choice)}
-                        >
-                            <Text style={styles.choiceText}>{choice.text.toUpperCase()}</Text>
-                        </TouchableOpacity>
-                    ))}
+        <View style={styles.container}>
+            {node.image && (
+                <View style={[styles.imageContainer, { flex: 0.7 }]}>
+                    <Image source={node.image} style={styles.nodeImage} resizeMode="cover" />
                 </View>
             )}
-        </ScrollView>
+
+            <View style={[styles.contentArea, { flex: 0.3 }]}>
+                <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+                    <TouchableOpacity activeOpacity={1} onPress={handleSkip}>
+                        <View style={[styles.panel, { minHeight: 'auto', marginBottom: theme.spacing.m }]}>
+                            {isTextFinished ? (
+                                <Text style={styles.content}>{node.content}</Text>
+                            ) : (
+                                <TypewriterText
+                                    text={node.content}
+                                    style={styles.content}
+                                    onComplete={() => setIsTextFinished(true)}
+                                    speed={30}
+                                />
+                            )}
+                        </View>
+                    </TouchableOpacity>
+
+                    {isTextFinished && (
+                        <View style={styles.choicesContainer}>
+                            {node.choices?.map((choice, index) => (
+                                <TouchableOpacity
+                                    key={choice.id}
+                                    style={[
+                                        styles.choiceButton,
+                                        { transform: [{ rotate: index % 2 === 0 ? '-1deg' : '1deg' }] }
+                                    ]}
+                                    onPress={() => handleChoice(choice)}
+                                >
+                                    <Text style={styles.choiceText}>{choice.text.toUpperCase()}</Text>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                    )}
+                </ScrollView>
+            </View>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        flexGrow: 1,
-        padding: theme.spacing.m,
+        flex: 1,
         backgroundColor: '#1a1a1a', // Darker background for contrast
     },
     endingContainer: {
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         alignItems: 'center',
+    },
+    contentArea: {
+        width: '100%',
+        paddingHorizontal: theme.spacing.m,
+        paddingBottom: theme.spacing.m,
+    },
+    scrollContent: {
+        flexGrow: 1,
+        paddingBottom: theme.spacing.xl,
     },
     panel: {
         ...theme.styles.comicBox,
         backgroundColor: theme.colors.comicBackground,
-        padding: theme.spacing.l,
-        marginBottom: theme.spacing.xl,
-        minHeight: 200,
+        padding: theme.spacing.m,
         justifyContent: 'center',
         overflow: 'hidden' // Ensure image respects border
     },
     imageContainer: {
         width: '100%',
-        height: 200,
-        marginBottom: 15,
-        borderWidth: 2,
-        borderColor: '#000',
+        marginBottom: 0,
+        borderBottomWidth: 2,
+        borderColor: '#fff',
     },
     nodeImage: {
         width: '100%',
