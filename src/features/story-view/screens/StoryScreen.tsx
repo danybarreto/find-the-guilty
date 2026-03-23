@@ -9,19 +9,21 @@ import { CipherGame } from '../../minigames/CipherGame';
 import { LockpickGame } from '../../minigames/LockpickGame';
 
 
+import { TerminalHacker } from '../../minigames/TerminalHacker';
+
 export const StoryScreen = () => {
     const { currentNode, makeChoice } = useStoryEngine();
     const resetGame = useGameStore((state) => state.resetGame);
     const removeItem = useGameStore((state) => state.removeItem);
     const inventory = useGameStore((state) => state.inventory);
     const history = useGameStore((state) => state.history);
-    const setCurrentNode = useGameStore((state) => state.setCurrentNode);
+    const rollbackToNode = useGameStore((state) => state.rollbackToNode);
 
     const handleRevive = () => {
         removeItem('ancient_coin');
         if (history.length > 1) {
             const prevNodeId = history[history.length - 2];
-            setCurrentNode(prevNodeId);
+            rollbackToNode(prevNodeId);
         } else {
             resetGame();
         }
@@ -66,6 +68,11 @@ export const StoryScreen = () => {
                         />
                     ) : currentNode.minigameId === 'cipher' ? (
                         <CipherGame
+                            onSuccess={handleMiniGameSuccess}
+                            onFailure={handleMiniGameFailure}
+                        />
+                    ) : currentNode.minigameId === 'terminal' ? (
+                        <TerminalHacker
                             onSuccess={handleMiniGameSuccess}
                             onFailure={handleMiniGameFailure}
                         />

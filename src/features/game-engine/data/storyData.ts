@@ -95,8 +95,29 @@ export const storyData: StoryData = {
         },
         lab_entered: {
             id: 'lab_entered',
+            type: 'narrative',
+            content: 'Access Granted. You step into a high-tech lab. There is a blinking terminal on the desk.',
+            choices: [{ id: 'c11', text: 'Hack Terminal', nextNodeId: 'terminal_hack' }]
+        },
+        terminal_hack: {
+            id: 'terminal_hack',
+            type: 'minigame',
+            minigameId: 'terminal',
+            content: 'The terminal contains files about the murder. Hack it before the guards arrive.',
+            choices: [
+                { id: 'success', text: 'Success', nextNodeId: 'lab_true_ending' },
+                { id: 'fail', text: 'Fail', nextNodeId: 'lab_bad_ending' }
+            ]
+        },
+        lab_true_ending: {
+            id: 'lab_true_ending',
             type: 'ending',
-            content: 'Access Granted. You step into a high-tech lab... TO BE CONTINUED...'
+            content: 'You downloaded the files! The corporation setup the crime. The truth is out. YOU WIN!'
+        },
+        lab_bad_ending: {
+            id: 'lab_bad_ending',
+            type: 'ending',
+            content: 'INTRUDER DETECTED. The room fills with gas before you can escape. GAME OVER.'
         },
         lab_fail: {
             id: 'lab_fail',

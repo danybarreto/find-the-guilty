@@ -15,16 +15,19 @@ export const CipherGame: React.FC<MiniGameProps> = ({ onSuccess, onFailure }) =>
         const newSeq = Array.from({ length: 4 }, () => Math.floor(Math.random() * 10));
         setSequence(newSeq);
 
+        const endTime = Date.now() + 3000; // 3 seconds from now
+
         const timer = setInterval(() => {
-            setTimeLeft((prev) => {
-                if (prev <= 1) {
-                    clearInterval(timer);
-                    setStatus('input');
-                    return 0;
-                }
-                return prev - 1;
-            });
-        }, 1000);
+            const now = Date.now();
+            const remaining = Math.max(0, Math.ceil((endTime - now) / 1000));
+            
+            setTimeLeft(remaining);
+            
+            if (remaining <= 0) {
+                clearInterval(timer);
+                setStatus('input');
+            }
+        }, 100); // Check more frequently (every 100ms) for smoother logic if backgrounded
 
         return () => clearInterval(timer);
     }, []);

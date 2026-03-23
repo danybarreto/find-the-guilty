@@ -14,6 +14,7 @@ export interface GameState {
     addItem: (item: string) => void;
     removeItem: (item: string) => void;
     setCurrentNode: (nodeId: string) => void;
+    rollbackToNode: (nodeId: string) => void;
     decreaseLives: () => void;
     resetGame: () => void;
     addJournalEntry: (text: string) => void;
@@ -36,6 +37,18 @@ export const useGameStore = create<GameState>()(
                 currentNodeId: nodeId,
                 history: [...state.history, nodeId]
             })),
+            rollbackToNode: (nodeId) => set((state) => {
+                const index = state.history.indexOf(nodeId);
+                if (index === -1) return state; // Node not found in history
+                
+                // Keep history up to and including the target node
+                const newHistory = state.history.slice(0, index + 1);
+                
+                return {
+                    currentNodeId: nodeId,
+                    history: newHistory,
+                };
+            }),
             decreaseLives: () => set((state) => ({ lives: Math.max(0, state.lives - 1) })),
             addJournalEntry: (text) => {
                 const currentJournal = get().journal;

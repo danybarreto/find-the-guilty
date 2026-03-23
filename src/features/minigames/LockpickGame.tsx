@@ -14,10 +14,18 @@ export const LockpickGame: React.FC<MiniGameProps> = ({ onSuccess, onFailure }) 
 
     // Random target position (between 0 and BAR_WIDTH - TARGET_WIDTH)
     const targetPosition = useRef(Math.random() * (BAR_WIDTH - TARGET_WIDTH)).current;
+    const currentPosRef = useRef(0);
 
     useEffect(() => {
+        const listenerId = positionAnim.addListener(({ value }) => {
+            currentPosRef.current = value;
+        });
+
         startAnimation();
-        return () => stopAnimation();
+        return () => {
+            stopAnimation();
+            positionAnim.removeListener(listenerId);
+        };
     }, []);
 
     const startAnimation = () => {
@@ -48,9 +56,8 @@ export const LockpickGame: React.FC<MiniGameProps> = ({ onSuccess, onFailure }) 
 
         stopAnimation();
 
-        // Get current value
-        // @ts-ignore: _value is internal but accessible for synchronous read
-        const currentPos = positionAnim.__getValue();
+        // Get current value from the listener ref
+        const currentPos = currentPosRef.current;
 
         // Check collision
         if (currentPos >= targetPosition && currentPos <= targetPosition + TARGET_WIDTH) {

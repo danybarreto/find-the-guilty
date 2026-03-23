@@ -91,84 +91,93 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        padding: 10,
-        backgroundColor: '#222',
-        borderBottomWidth: 1,
-        borderBottomColor: '#444',
+        padding: 15,
+        backgroundColor: '#111',
+        borderBottomWidth: 3,
+        borderBottomColor: theme.colors.gold,
         zIndex: 10
     },
     section: {
         flexDirection: 'row',
         alignItems: 'center',
     },
-    text: {
-        color: '#fff',
-        marginLeft: 5,
-        fontWeight: 'bold',
-    },
     inventoryList: {
         flexDirection: 'row',
         marginLeft: 10,
-        gap: 10
+        gap: 15
     },
     inventoryItem: {
         color: theme.colors.gold,
-        textDecorationLine: 'underline',
+        fontWeight: 'bold',
+        textTransform: 'uppercase',
+    },
+    text: {
+        color: '#fff',
+        marginLeft: 8,
+        fontWeight: 'bold',
+        fontSize: 16
     },
     modalOverlay: {
         flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.8)',
+        backgroundColor: 'rgba(0,0,0,0.85)',
         justifyContent: 'center',
         alignItems: 'center'
     },
     modalContent: {
-        width: '80%',
-        backgroundColor: '#fff',
-        padding: 20,
-        borderRadius: 10,
-        borderWidth: 4,
-        borderColor: '#000',
+        width: '85%',
+        ...theme.styles.comicBox,
+        padding: 24,
         alignItems: 'center'
     },
     journalContent: {
-        height: '70%',
+        height: '75%',
         backgroundColor: theme.colors.comicBackground,
     },
     modalTitle: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 20,
+        fontSize: 26,
+        fontWeight: '900',
+        marginBottom: 15,
         fontFamily: 'serif',
-        textDecorationLine: 'underline'
+        textTransform: 'uppercase',
+        borderBottomWidth: 2,
+        paddingBottom: 5
     },
     modalDescription: {
-        fontSize: 16,
+        fontSize: 18,
         textAlign: 'center',
-        fontFamily: 'serif'
+        fontFamily: 'serif',
+        lineHeight: 24
     },
     closeButton: {
         position: 'absolute',
-        top: 10,
-        right: 10,
-        zIndex: 1
+        top: 15,
+        right: 15,
+        zIndex: 2,
+        backgroundColor: theme.colors.gold,
+        borderRadius: 20,
+        padding: 4
     },
     journalList: {
-        width: '100%'
+        width: '100%',
+        marginTop: 10
     },
     journalEntry: {
-        marginBottom: 15,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
+        marginBottom: 20,
+        borderLeftWidth: 4,
+        borderLeftColor: theme.colors.gold,
+        paddingLeft: 10,
         paddingBottom: 5
     },
     journalTimestamp: {
         fontSize: 12,
-        color: '#666',
-        fontFamily: 'monospace'
+        color: '#555',
+        fontWeight: 'bold',
+        marginBottom: 4
     },
     journalText: {
         fontSize: 16,
-        color: '#000',
-        fontFamily: 'serif'
+        color: '#222',
+        fontFamily: 'serif',
+        lineHeight: 22
     }
 });
