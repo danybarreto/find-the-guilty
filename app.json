@@ -16,6 +16,7 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.dannybrt.findtheguilty",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -34,6 +35,12 @@
           "iosAppId": "ca-app-pub-3940256099942544~1458002511"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "3a6aaa91-9a9c-44ce-a9a0-ac8d478a12dd"
+      }
+    },
+    "owner": "dannybrt"
   }
 }
