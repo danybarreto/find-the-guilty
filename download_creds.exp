@@ -1,0 +1,8 @@
+spawn npx eas credentials -p android
+expect "? Which build profile do you want to configure?"
+send "\033\[B\033\[B\r"
+expect "? What do you want to do?"
+send "\033\[B\033\[B\033\[B\r"
+expect "? What do you want to do?"
+send "\r"
+expect eof
