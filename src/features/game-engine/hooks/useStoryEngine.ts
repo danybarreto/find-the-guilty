@@ -36,7 +36,7 @@ export const useStoryEngine = () => {
             addItem(nextNode.itemReward);
         }
 
-        setCurrentNode(nextNodeId);
+        setCurrentNode(nextNodeId, choice.isGoodDecision);
     };
 
     return {

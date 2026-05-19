@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image, useWindowDimensions } from 'react-native';
 import { StoryNode, Choice } from '../../game-engine/types';
 import * as Haptics from 'expo-haptics';
-import { theme } from '@/shared/theme';
+import { colors, typography, spacing } from '../../../shared/theme/theme';
 import { TypewriterText } from '@/shared/components/TypewriterText';
 
 interface ComicPanelProps {
@@ -38,14 +38,14 @@ export const ComicPanel: React.FC<ComicPanelProps> = ({ node, onChoiceSelect }) 
                 )}
                 <View style={[styles.contentArea, { flex: 0.35 }]}>
                     <ScrollView contentContainerStyle={styles.scrollContent}>
-                        <View style={[styles.panel, { borderColor: theme.colors.error, minHeight: 'auto' }]}>
+                        <View style={[styles.panel, { borderColor: colors.error, minHeight: 'auto' }]}>
                             <TypewriterText
                                 text={node.content}
                                 style={styles.content}
                                 onComplete={() => setIsTextFinished(true)}
                             />
                         </View>
-                        {isTextFinished && <Text style={styles.gameOverText}>GAME OVER</Text>}
+                        {isTextFinished && <Text style={styles.gameOverText}>FIN DEL CAMINO</Text>}
                     </ScrollView>
                 </View>
             </View>
@@ -63,7 +63,7 @@ export const ComicPanel: React.FC<ComicPanelProps> = ({ node, onChoiceSelect }) 
             <View style={[styles.contentArea, { flex: 0.3 }]}>
                 <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
                     <TouchableOpacity activeOpacity={1} onPress={handleSkip}>
-                        <View style={[styles.panel, { minHeight: 'auto', marginBottom: theme.spacing.m }]}>
+                        <View style={[styles.panel, { minHeight: 'auto', marginBottom: spacing.md }]}>
                             {isTextFinished ? (
                                 <Text style={styles.content}>{node.content}</Text>
                             ) : (
@@ -102,7 +102,7 @@ export const ComicPanel: React.FC<ComicPanelProps> = ({ node, onChoiceSelect }) 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#1a1a1a', // Darker background for contrast
+        backgroundColor: colors.background,
     },
     endingContainer: {
         justifyContent: 'flex-start',
@@ -110,70 +110,61 @@ const styles = StyleSheet.create({
     },
     contentArea: {
         width: '100%',
-        paddingHorizontal: theme.spacing.m,
-        paddingBottom: theme.spacing.m,
+        paddingHorizontal: spacing.md,
+        paddingBottom: spacing.md,
     },
     scrollContent: {
         flexGrow: 1,
-        paddingBottom: theme.spacing.xl,
+        paddingBottom: spacing.xl,
     },
     panel: {
-        ...theme.styles.comicBox,
-        backgroundColor: theme.colors.comicBackground,
-        padding: theme.spacing.m,
+        backgroundColor: colors.surface,
+        borderWidth: 2,
+        borderColor: colors.border,
+        padding: spacing.md,
         justifyContent: 'center',
-        overflow: 'hidden' // Ensure image respects border
+        overflow: 'hidden'
     },
     imageContainer: {
         width: '100%',
         marginBottom: 0,
-        borderBottomWidth: 2,
-        borderColor: '#fff',
+        borderBottomWidth: 4,
+        borderColor: colors.primary,
     },
     nodeImage: {
         width: '100%',
         height: '100%',
     },
     content: {
-        fontSize: 20,
-        fontFamily: 'serif', // Keep serif for comic feel
-        color: theme.colors.comicText,
+        fontSize: typography.sizes.lg,
+        fontFamily: typography.fontFamily,
+        color: colors.primary,
         lineHeight: 28,
-        fontWeight: '500',
+        fontWeight: typography.weights.bold,
     },
     choicesContainer: {
-        gap: 15,
+        gap: spacing.md,
         paddingBottom: 40,
     },
     choiceButton: {
-        backgroundColor: '#fff',
-        padding: 15,
-        borderWidth: 3,
-        borderColor: '#000',
-        borderRadius: 255, // Jagged/Organic look approximation
-        borderBottomLeftRadius: 5,
-        borderTopRightRadius: 5,
+        backgroundColor: colors.surface,
+        padding: spacing.md,
+        borderWidth: 2,
+        borderColor: colors.border,
         alignItems: 'center',
-        shadowColor: "#000",
-        shadowOffset: { width: 3, height: 3 },
-        shadowOpacity: 1,
-        shadowRadius: 0,
-        elevation: 4,
     },
     choiceText: {
-        color: '#000',
-        fontSize: 18,
-        fontWeight: '900', // Heavy font for actions
-        fontFamily: 'sans-serif-condensed', // Or normal bold
+        color: colors.primary,
+        fontSize: typography.sizes.lg,
+        fontWeight: typography.weights.black,
+        letterSpacing: 1,
     },
     gameOverText: {
-        fontSize: 40,
-        color: theme.colors.error,
-        fontWeight: 'bold',
+        fontSize: 36,
+        color: colors.error,
+        fontWeight: typography.weights.black,
         marginTop: 30,
-        textShadowColor: '#000',
-        textShadowOffset: { width: 2, height: 2 },
-        textShadowRadius: 0,
-        letterSpacing: 5
+        textAlign: 'center',
+        letterSpacing: 2
     }
 });

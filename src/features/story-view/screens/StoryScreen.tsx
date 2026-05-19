@@ -6,9 +6,14 @@ import { ComicPanel } from '../components/ComicPanel';
 import { HUD } from '../components/HUD';
 import { useGameStore } from '../../game-engine/store';
 import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../app/navigation/RootNavigator';
 import { CipherGame } from '../../minigames/CipherGame';
 import { LockpickGame } from '../../minigames/LockpickGame';
 import { TerminalHacker } from '../../minigames/TerminalHacker';
+import { colors, typography, spacing } from '../../../shared/theme/theme';
+
+type StoryScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Story'>;
 
 const interstitial = InterstitialAd.createForAdRequest(TestIds.INTERSTITIAL, {
   requestNonPersonalizedAdsOnly: true,
@@ -16,12 +21,14 @@ const interstitial = InterstitialAd.createForAdRequest(TestIds.INTERSTITIAL, {
 
 export const StoryScreen = () => {
     const { height: windowHeight } = useWindowDimensions();
+    const navigation = useNavigation<StoryScreenNavigationProp>();
     const { currentNode, makeChoice } = useStoryEngine();
     const resetGame = useGameStore((state) => state.resetGame);
     const removeItem = useGameStore((state) => state.removeItem);
     const inventory = useGameStore((state) => state.inventory);
     const history = useGameStore((state) => state.history);
     const rollbackToNode = useGameStore((state) => state.rollbackToNode);
+    const endGame = useGameStore((state) => state.endGame);
     const [interstitialLoaded, setInterstitialLoaded] = useState(false);
 
     useEffect(() => {
@@ -77,6 +84,11 @@ export const StoryScreen = () => {
         handleRevive();
     };
 
+    const handleSeeResolution = () => {
+        endGame();
+        navigation.navigate('Resolution');
+    };
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={{ flex: 1 }}>
@@ -121,12 +133,12 @@ export const StoryScreen = () => {
 
                 {currentNode.type === 'ending' && (
                     <View style={styles.endingButtons}>
-                        <Button title="Restart Game" onPress={handleRestartWithAd} color="red" />
+                        <Button title="Ver Resolución del Caso" onPress={handleSeeResolution} color={colors.accent} />
                         {currentNode.content.includes("GAME OVER") && inventory.includes('ancient_coin') && (
                             <Button
-                                title="Use Ancient Coin to Retry"
+                                title="Usar Moneda Antigua para Revivir"
                                 onPress={handleReviveWithAd}
-                                color="gold"
+                                color={colors.accentSecondary}
                             />
                         )}
                     </View>
@@ -147,30 +159,37 @@ export const StoryScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#000',
+        backgroundColor: colors.background,
     },
     text: {
-        color: '#fff',
-        fontSize: 24,
+        color: colors.primary,
+        fontFamily: typography.fontFamily,
+        fontSize: typography.sizes.xl,
+        fontWeight: typography.weights.bold,
         textAlign: 'center',
-        marginTop: 10,
+        marginTop: spacing.md,
+        textTransform: 'uppercase',
+        letterSpacing: 1,
     },
     subtext: {
-        color: '#ccc',
-        fontSize: 16,
+        color: colors.textMuted,
+        fontFamily: typography.fontFamily,
+        fontSize: typography.sizes.md,
         textAlign: 'center',
-        padding: 20
+        padding: spacing.lg,
+        lineHeight: 24,
     },
     minigameContainer: {
         flex: 1,
         alignItems: 'center',
-        paddingTop: 0
+        paddingTop: 0,
+        backgroundColor: colors.surface,
     },
     imageContainer: {
         width: '100%',
-        marginBottom: 10,
-        borderWidth: 2,
-        borderColor: '#fff',
+        marginBottom: spacing.md,
+        borderWidth: 4,
+        borderColor: colors.border,
     },
     nodeImage: {
         width: '100%',
@@ -179,17 +198,25 @@ const styles = StyleSheet.create({
     minigameChoices: {
         flexDirection: 'row',
         justifyContent: 'space-around',
-        marginTop: 20
+        marginTop: spacing.lg,
+        width: '100%',
+        paddingHorizontal: spacing.lg,
     },
     endingButtons: {
-        gap: 10,
-        marginTop: 20,
-        paddingHorizontal: 20
+        gap: spacing.md,
+        marginTop: spacing.lg,
+        paddingHorizontal: spacing.lg,
+        backgroundColor: colors.surface,
+        paddingVertical: spacing.xl,
+        borderTopWidth: 2,
+        borderColor: colors.accent,
     },
     adContainer: {
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#000',
+        backgroundColor: colors.background,
         width: '100%',
+        borderTopWidth: 1,
+        borderColor: colors.border,
     }
 });

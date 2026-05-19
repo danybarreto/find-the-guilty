@@ -3,280 +3,229 @@ import { StoryData } from '../types';
 export const storyData: StoryData = {
     startNodeId: 'intro',
     nodes: {
+        // --- ACTO 1: LA INVITACIÓN ---
         intro: {
             id: 'intro',
             type: 'narrative',
-            content: 'You arrive at the scene. It’s raining. A body lies on the pavement.',
+            act: 1,
+            content: 'Llegas a la escena. Llueve. Un cuerpo yace en el pavimento.',
             image: require('../assets/images/intro.png'),
             choices: [
-                { id: 'c1', text: 'Examine the body', nextNodeId: 'body_examine' },
-                { id: 'c2', text: 'Talk to the witness', nextNodeId: 'witness_talk' },
+                { id: 'c1', text: 'Examinar cuerpo', nextNodeId: 'body_examine' },
+                { id: 'c2', text: 'Hablar con testigo', nextNodeId: 'witness_talk' },
             ],
         },
         body_examine: {
             id: 'body_examine',
             type: 'choice',
-            content: 'The victim is clutching a strange coin. It looks ancient.',
+            act: 1,
+            content: 'La víctima sujeta una extraña moneda. Parece antigua.',
             itemReward: 'ancient_coin',
-            journalEntry: 'Found victim with an ancient coin.',
+            journalEntry: 'Víctima encontrada con una moneda antigua.',
             image: require('../assets/images/body_examine.png'),
             choices: [
-                { id: 'c3', text: 'Keep the coin', nextNodeId: 'keep_coin' },
-                { id: 'c4', text: 'Leave it for forensics', nextNodeId: 'leave_coin' },
+                { id: 'c3', text: 'Guardar moneda', nextNodeId: 'keep_coin', isGoodDecision: true },
+                { id: 'c4', text: 'Dejar para forense', nextNodeId: 'leave_coin', isGoodDecision: false },
             ],
-        },
-        witness_talk: {
-            id: 'witness_talk',
-            type: 'choice',
-            content: 'The witness is shaking. "I saw a shadow... huge... with glowing eyes!"',
-            journalEntry: 'Witness saw a huge shadow with glowing eyes.',
-            image: require('../assets/images/witness_talk.png'),
-            choices: [
-                { id: 'c5', text: 'Press for details', nextNodeId: 'witness_press' },
-                { id: 'c6', text: 'Check the alley', nextNodeId: 'alley_check' },
-            ],
-        },
-        keep_coin: {
-            id: 'keep_coin',
-            type: 'narrative',
-            content: 'You pocket the coin. It feels warm.',
-            image: require('../assets/images/keep_coin.png'),
-            choices: [{ id: 'c7', text: 'Continue investigation', nextNodeId: 'search_alley' }],
         },
         leave_coin: {
             id: 'leave_coin',
             type: 'ending',
-            content: 'You leave the evidence. Later, it disappears. Case Cold. GAME OVER.',
+            content: 'Dejas la evidencia. Más tarde, desaparece. Caso Cerrado. GAME OVER.',
             image: require('../assets/images/leave_coin.png'),
+        },
+        keep_coin: {
+            id: 'keep_coin',
+            type: 'narrative',
+            act: 1,
+            content: 'Al guardar la moneda, notas un mensaje críptico pintado en la pared con sangre.',
+            image: require('../assets/images/cryptic_message.png'),
+            choices: [{ id: 'c5', text: 'Leer mensaje', nextNodeId: 'cryptic_read' }],
+        },
+        witness_talk: {
+            id: 'witness_talk',
+            type: 'choice',
+            act: 1,
+            content: 'El testigo tiembla. "¡Vi una sombra... enorme... con ojos brillantes!"',
+            image: require('../assets/images/witness_talk.png'),
+            choices: [
+                { id: 'c5', text: 'Presionar agresivamente', nextNodeId: 'witness_press', isGoodDecision: false },
+                { id: 'c6', text: 'Buscar pistas alrededor', nextNodeId: 'keep_coin', isGoodDecision: true },
+            ],
         },
         witness_press: {
             id: 'witness_press',
             type: 'ending',
-            content: 'The witness panics and runs away. You lost your only lead. GAME OVER.',
+            content: 'El testigo entra en pánico y huye. Perdiste tu única pista. GAME OVER.',
             image: require('../assets/images/witness_press.png'),
         },
-        alley_check: {
-            id: 'alley_check',
+        cryptic_read: {
+            id: 'cryptic_read',
             type: 'narrative',
-            content: 'You check the alley. You find a matchbook for "The Neon Bar" covered in blood.',
-            journalEntry: 'Found a bloody matchbook for "The Neon Bar".',
-            image: require('../assets/images/alley_check.png'),
-            choices: [{ id: 'c8', text: 'Go to the Bar', nextNodeId: 'neon_bar_exterior' }],
+            act: 1,
+            content: 'MATA A TU HERMANO. Este asesino te conoce. El rastro lleva al Asilo Abandonado.',
+            journalEntry: 'Mensaje del asesino. Rastro hacia el Asilo.',
+            image: require('../assets/images/cryptic_message.png'),
+            choices: [{ id: 'c7', text: 'Ir al Asilo', nextNodeId: 'act2_asylum' }],
         },
-        search_alley: {
-            id: 'search_alley',
-            type: 'narrative',
-            content: 'With the coin in hand, the alley reveals a hidden glowing message pointing to "The Neon Bar".',
-            journalEntry: 'Coin revealed a hidden message about The Neon Bar.',
-            image: require('../assets/images/search_alley.png'),
-            choices: [{ id: 'c9', text: 'Go to the Bar', nextNodeId: 'neon_bar_exterior' }],
-        },
-        neon_bar_exterior: {
-            id: 'neon_bar_exterior',
+
+        // --- ACTO 2: EL LABERINTO DE SOMBRAS ---
+        act2_asylum: {
+            id: 'act2_asylum',
             type: 'choice',
-            content: 'The Neon Bar is a dive in the lower sectors. Rain pours heavily.',
-            image: require('../assets/images/neon_bar_exterior.png'),
+            act: 2,
+            content: 'El olor a podredumbre inunda los pasillos del Asilo. Una silla de ruedas ensangrentada te bloquea el paso.',
+            image: require('../assets/images/asylum_interior.png'),
             choices: [
-                { id: 'nb1', text: 'Enter quietly', nextNodeId: 'neon_bar_inside' },
-                { id: 'nb2', text: 'Kick the door in', nextNodeId: 'neon_bar_aggressive' }
+                { id: 'a1', text: 'Revisar expedientes médicos', nextNodeId: 'asylum_files', isGoodDecision: true },
+                { id: 'a2', text: 'Seguir el rastro de sangre', nextNodeId: 'asylum_trap', isGoodDecision: false },
             ]
         },
-        neon_bar_aggressive: {
-            id: 'neon_bar_aggressive',
+        asylum_trap: {
+            id: 'asylum_trap',
             type: 'ending',
-            content: 'You kick the door in. The bouncer turns you into swiss cheese. GAME OVER.',
-            image: require('../assets/images/neon_bar_aggressive.png')
+            content: 'Caíste en una trampa del asesino. El suelo cede bajo tus pies. GAME OVER.',
+            image: require('../assets/images/asylum_interior.png'),
         },
-        neon_bar_inside: {
-            id: 'neon_bar_inside',
-            type: 'choice',
-            content: 'Inside, a Cyborg Bartender is wiping a glass. He glares at you.',
-            image: require('../assets/images/neon_bar_inside.png'),
-            choices: [
-                { id: 'nb3', text: 'Ask about the victim', nextNodeId: 'bartender_interrogate' },
-                { id: 'nb4', text: 'Order a drink', nextNodeId: 'bartender_drink' }
-            ]
-        },
-        bartender_drink: {
-            id: 'bartender_drink',
+        asylum_files: {
+            id: 'asylum_files',
             type: 'narrative',
-            content: 'You order a whiskey. The bartender loosens up. "Your victim... he has an apartment in Sector 4."',
-            journalEntry: 'Victim lived in Sector 4.',
-            image: require('../assets/images/bartender_drink.png'),
-            choices: [{ id: 'nb5', text: 'Go to Apartment', nextNodeId: 'apartment_exterior' }]
+            act: 2,
+            content: 'Encuentras tu propio nombre en los registros de pacientes. Un mapa adjunto señala una Fábrica en ruinas.',
+            journalEntry: 'Fui paciente aquí. Siguiente pista: La Fábrica.',
+            itemReward: 'asylum_file',
+            image: require('../assets/images/asylum_interior.png'),
+            choices: [{ id: 'a3', text: 'Ir a la Fábrica', nextNodeId: 'act2_factory' }]
         },
-        bartender_interrogate: {
-            id: 'bartender_interrogate',
-            type: 'choice',
-            content: '"I don\'t know nothing," he growls, reaching under the counter.',
-            image: require('../assets/images/bartender_interrogate.png'),
-            choices: [
-                { id: 'nb6', text: 'Draw weapon', nextNodeId: 'bartender_fight' },
-                { id: 'nb7', text: 'Show badge', nextNodeId: 'bartender_drink' }
-            ]
-        },
-        bartender_fight: {
-            id: 'bartender_fight',
-            type: 'ending',
-            content: 'You draw your weapon, but his arm transforms into a plasma cannon. You get vaporized. GAME OVER.',
-            image: require('../assets/images/bartender_fight.png')
-        },
-        apartment_exterior: {
-            id: 'apartment_exterior',
-            type: 'narrative',
-            content: 'You arrive at Sector 4. The door to the apartment is ajar.',
-            image: require('../assets/images/apartment_exterior.png'),
-            choices: [{ id: 'ap1', text: 'Enter carefully', nextNodeId: 'apartment_inside' }]
-        },
-        apartment_inside: {
-            id: 'apartment_inside',
-            type: 'choice',
-            content: 'The apartment is trashed. Papers everywhere, a glowing monitor in the corner.',
-            image: require('../assets/images/apartment_inside.png'),
-            choices: [
-                { id: 'ap2', text: 'Check monitor', nextNodeId: 'apartment_monitor' },
-                { id: 'ap3', text: 'Check papers', nextNodeId: 'apartment_papers' }
-            ]
-        },
-        apartment_papers: {
-            id: 'apartment_papers',
-            type: 'narrative',
-            content: 'You find a flyer for a hacker named "Zero". It has an address.',
-            journalEntry: 'Found address for hacker "Zero".',
-            image: require('../assets/images/apartment_papers.png'),
-            choices: [{ id: 'ap4', text: 'Go to Hacker Den', nextNodeId: 'hacker_exterior' }]
-        },
-        apartment_monitor: {
-            id: 'apartment_monitor',
-            type: 'narrative',
-            content: 'The monitor is rigged! A flashbang goes off, blinding you.',
-            image: require('../assets/images/apartment_monitor.png'),
-            choices: [{ id: 'ap5', text: 'Stumble blindly', nextNodeId: 'cop_encounter' }]
-        },
-        cop_encounter: {
-            id: 'cop_encounter',
-            type: 'choice',
-            content: 'You trip outside, right into a Corrupt Cop. "Well well... an easy bust."',
-            image: require('../assets/images/cop_encounter.png'),
-            choices: [
-                { id: 'cop1', text: 'Bribe him', nextNodeId: 'cop_bribe' },
-                { id: 'cop2', text: 'Fight him', nextNodeId: 'cop_fight' },
-                { id: 'cop3', text: 'Run', nextNodeId: 'cop_run' }
-            ]
-        },
-        cop_fight: {
-            id: 'cop_fight',
-            type: 'ending',
-            content: 'He is wearing level 4 kinetic armor. Your punches do nothing. He arrests you. GAME OVER.',
-            image: require('../assets/images/cop_fight.png')
-        },
-        cop_run: {
-            id: 'cop_run',
-            type: 'ending',
-            content: 'You try to run, but he shoots you with a stun gun. You are captured. GAME OVER.',
-            image: require('../assets/images/cop_run.png')
-        },
-        cop_bribe: {
-            id: 'cop_bribe',
-            type: 'narrative',
-            content: 'You hand him all your credits. He scoffs but lets you go. You find the hacker address from his terminal while he wasn\'t looking.',
-            image: require('../assets/images/cop_bribe.png'),
-            choices: [{ id: 'cop4', text: 'Go to Hacker Den', nextNodeId: 'hacker_exterior' }]
-        },
-        hacker_exterior: {
-            id: 'hacker_exterior',
-            type: 'narrative',
-            content: 'You arrive at the Hacker Den. It is hidden behind an old subway station.',
-            image: require('../assets/images/hacker_exterior.png'),
-            choices: [{ id: 'h1', text: 'Enter', nextNodeId: 'hacker_inside' }]
-        },
-        hacker_inside: {
-            id: 'hacker_inside',
-            type: 'choice',
-            content: 'Monitors everywhere. Zero turns around. "I can find who did this... for a price."',
-            image: require('../assets/images/hacker_inside.png'),
-            choices: [
-                { id: 'h2', text: 'Ask for server access', nextNodeId: 'sewer_enter' },
-                { id: 'h3', text: 'Ask for the killer\'s name', nextNodeId: 'hacker_refusal' }
-            ]
-        },
-        hacker_refusal: {
-            id: 'hacker_refusal',
-            type: 'narrative',
-            content: '"I don\'t sell names. Only access. The server is hidden in the sewers. I sent you the location."',
-            image: require('../assets/images/hacker_refusal.png'),
-            choices: [{ id: 'h4', text: 'Go to Sewers', nextNodeId: 'sewer_enter' }]
-        },
-        sewer_enter: {
-            id: 'sewer_enter',
+        act2_factory: {
+            id: 'act2_factory',
             type: 'minigame',
-            content: 'A locked grate blocks the server entrance. Pick the lock!',
-            minigameId: 'lockpick',
-            image: require('../assets/images/sewer_enter.png'),
-            choices: [
-                { id: 'success', text: 'Success', nextNodeId: 'sewer_success' },
-                { id: 'fail', text: 'Fail', nextNodeId: 'sewer_fail' }
-            ]
-        },
-        sewer_success: {
-            id: 'sewer_success',
-            type: 'narrative',
-            content: 'You opened the grate! You find a hidden door with a strange electronic lock.',
-            image: require('../assets/images/sewer_success.png'),
-            choices: [{ id: 'c10', text: 'Examine lock', nextNodeId: 'lab_door' }]
-        },
-        lab_door: {
-            id: 'lab_door',
-            type: 'minigame',
-            content: 'Crack the security code to enter the server room.',
+            act: 2,
+            content: 'Engranajes gigantes y oxidados. La puerta a la sala de control está bloqueada por un panel electrónico.',
             minigameId: 'cipher',
-            image: require('../assets/images/lab_door_01.png'),
+            image: require('../assets/images/factory_ruins.png'),
             choices: [
-                { id: 'success', text: 'Success', nextNodeId: 'lab_entered' },
-                { id: 'fail', text: 'Fail', nextNodeId: 'lab_fail' }
+                { id: 'success', text: 'Hackear exitoso', nextNodeId: 'factory_success', isGoodDecision: true },
+                { id: 'fail', text: 'Hackear fallido', nextNodeId: 'factory_fail', isGoodDecision: false }
             ]
         },
-        lab_entered: {
-            id: 'lab_entered',
+        factory_fail: {
+            id: 'factory_fail',
+            type: 'ending',
+            content: 'La alarma suena. Gas tóxico inunda la sala. GAME OVER.',
+            image: require('../assets/images/factory_ruins.png')
+        },
+        factory_success: {
+            id: 'factory_success',
             type: 'narrative',
-            content: 'Access Granted. You step into a high-tech lab. There is a blinking terminal on the desk.',
-            image: require('../assets/images/lab_entered.png'),
-            choices: [{ id: 'c11', text: 'Hack Terminal', nextNodeId: 'terminal_hack' }]
+            act: 2,
+            content: 'En la computadora descubres una transferencia de fondos ilícitos. Destino: El Orfanato.',
+            journalEntry: 'Transferencia ilícita ligada al Orfanato St. Jude.',
+            itemReward: 'factory_drive',
+            image: require('../assets/images/factory_ruins.png'),
+            choices: [{ id: 'f1', text: 'Ir al Orfanato', nextNodeId: 'act2_orphanage' }]
         },
-        terminal_hack: {
-            id: 'terminal_hack',
-            type: 'minigame',
-            minigameId: 'terminal',
-            content: 'The terminal contains files about the murder. Hack it before the guards arrive.',
-            image: require('../assets/images/terminal_hack.png'),
+        act2_orphanage: {
+            id: 'act2_orphanage',
+            type: 'choice',
+            act: 2,
+            content: 'El Orfanato St. Jude. El lugar donde creciste. La puerta principal está abierta.',
+            image: require('../assets/images/orphanage_exterior.png'),
             choices: [
-                { id: 'success', text: 'Success', nextNodeId: 'lab_true_ending' },
-                { id: 'fail', text: 'Fail', nextNodeId: 'lab_bad_ending' }
+                { id: 'o1', text: 'Entrar cautelosamente', nextNodeId: 'orphanage_inside', isGoodDecision: true },
+                { id: 'o2', text: 'Llamar a los refuerzos', nextNodeId: 'orphanage_cops', isGoodDecision: false }
             ]
         },
-        lab_true_ending: {
-            id: 'lab_true_ending',
+        orphanage_cops: {
+            id: 'orphanage_cops',
             type: 'ending',
-            content: 'You downloaded the files! The corporation setup the crime. The truth is out. YOU WIN!',
-            image: require('../assets/images/lab_true_ending.png')
+            content: 'La policía llega e interfiere con la escena, destruyendo las pruebas. El asesino escapa. GAME OVER.',
+            image: require('../assets/images/orphanage_exterior.png')
         },
-        lab_bad_ending: {
-            id: 'lab_bad_ending',
-            type: 'ending',
-            content: 'INTRUDER DETECTED. The room fills with gas before you can escape. GAME OVER.',
-            image: require('../assets/images/lab_bad_ending.png')
+        orphanage_inside: {
+            id: 'orphanage_inside',
+            type: 'narrative',
+            act: 2,
+            content: 'Adentro, encuentras los juguetes de tu hermano. Alguien los acomodó para formar la palabra "MUELLES".',
+            journalEntry: 'Mensaje macabro en el orfanato. Hacia los muelles.',
+            image: require('../assets/images/orphanage_exterior.png'),
+            choices: [{ id: 'o3', text: 'Ir a los Muelles', nextNodeId: 'act2_docks' }]
         },
-        lab_fail: {
-            id: 'lab_fail',
-            type: 'ending',
-            content: 'Security system triggered. Alarm sounds. You flee. GAME OVER.',
-            image: require('../assets/images/lab_fail.png')
+        act2_docks: {
+            id: 'act2_docks',
+            type: 'narrative',
+            act: 2,
+            content: 'Niebla espesa. Un contenedor rojo brillante destaca en la oscuridad.',
+            image: require('../assets/images/docks_night.png'),
+            choices: [{ id: 'd1', text: 'Abrir contenedor', nextNodeId: 'docks_container' }]
         },
-        sewer_fail: {
-            id: 'sewer_fail',
+        docks_container: {
+            id: 'docks_container',
+            type: 'choice',
+            act: 2,
+            content: 'Adentro hay archivos robados de la policía. Alguien encubrió crímenes pasados.',
+            image: require('../assets/images/docks_night.png'),
+            choices: [
+                { id: 'd2', text: 'Llevar los archivos', nextNodeId: 'act3_archives', isGoodDecision: true },
+                { id: 'd3', text: 'Quemar los archivos', nextNodeId: 'docks_burn', isGoodDecision: false }
+            ]
+        },
+        docks_burn: {
+            id: 'docks_burn',
             type: 'ending',
-            content: 'The lock broke. You are stuck. GAME OVER.',
-            image: require('../assets/images/sewer_fail.png')
+            content: 'Destruyes la única prueba real. Nunca sabrás la verdad. GAME OVER.',
+            image: require('../assets/images/docks_night.png')
+        },
+
+        // --- ACTO 3: EL JUICIO FINAL ---
+        act3_archives: {
+            id: 'act3_archives',
+            type: 'narrative',
+            act: 3,
+            content: 'Vas a los Archivos Centrales de la Policía a confrontar la verdad.',
+            image: require('../assets/images/police_archives.png'),
+            choices: [{ id: 'arch1', text: 'Descender al archivo', nextNodeId: 'archives_boss' }]
+        },
+        archives_boss: {
+            id: 'archives_boss',
+            type: 'choice',
+            act: 3,
+            content: 'El Jefe de Policía te espera armado. "Descubriste demasiado, detective".',
+            image: require('../assets/images/police_archives.png'),
+            choices: [
+                { id: 'boss1', text: 'Disparar primero', nextNodeId: 'archives_shoot', isGoodDecision: false },
+                { id: 'boss2', text: 'Presentar evidencias', nextNodeId: 'archives_evidence', isGoodDecision: true }
+            ]
+        },
+        archives_shoot: {
+            id: 'archives_shoot',
+            type: 'ending',
+            content: 'Lo matas, pero ahora eres un asesino de policías sin pruebas oficiales.',
+            image: require('../assets/images/police_archives.png')
+        },
+        archives_evidence: {
+            id: 'archives_evidence',
+            type: 'minigame',
+            act: 3,
+            content: 'Debes descifrar la terminal central para transmitir las pruebas a la prensa antes de que te dispare.',
+            minigameId: 'terminal',
+            image: require('../assets/images/police_archives.png'),
+            choices: [
+                { id: 'success', text: 'Transmitir', nextNodeId: 'true_ending', isGoodDecision: true },
+                { id: 'fail', text: 'Fallar', nextNodeId: 'bad_ending', isGoodDecision: false }
+            ]
+        },
+        bad_ending: {
+            id: 'bad_ending',
+            type: 'ending',
+            content: 'Fallas. Te dispara y destruye todo. GAME OVER.',
+            image: require('../assets/images/police_archives.png')
+        },
+        true_ending: {
+            id: 'true_ending',
+            type: 'ending',
+            content: 'Transmitido con éxito. El FBI entra al edificio. Sobreviviste al laberinto.',
+            image: require('../assets/images/resolution_bg.png')
         }
     },
 };
